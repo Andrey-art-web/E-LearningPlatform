@@ -59,3 +59,12 @@ class Content(models.Model):
     )
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
+
+class BaseContent(models.Model):
+    title = models.CharField(max_length=100)
+    created = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        abstract = True
+
+class Text(BaseContent):
+    body = models.TextField()
