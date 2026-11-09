@@ -60,11 +60,30 @@ class Content(models.Model):
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
 
-class BaseContent(models.Model):
-    title = models.CharField(max_length=100)
+class ItemBase(models.Model):
+    owner = models.ForeignKey(
+        User,
+        related_name= '%(class)s_related',
+        on_delete=models.CASCADE
+    )
+    title = models.CharField(max_length=250)
     created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
     class Meta:
         abstract = True
 
-class Text(BaseContent):
-    body = models.TextField()
+    def __str__(self):
+        return self.title
+
+class Text(ItemBase):
+    content = models.TextField()
+
+class File(ItemBase):
+    file = models.FileField(upload_to='files')
+
+class Image(ItemBase):
+    file = models.FileField(upload_to='images')
+
+class Video(ItemBase):
+    url = models.URLField()
